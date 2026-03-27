@@ -11,6 +11,10 @@ package modelo;
 import java.util.Date;
 import java.util.List;
 
+// Importamos la interfaz de estrategia
+import patrones.strategy.PrecioStrategy;
+import patrones.strategy.PrecioBase;
+
 public class ServicioAlquiler {
     private static int consecutivo = 1; // contador global
     private int numero;
@@ -19,9 +23,11 @@ public class ServicioAlquiler {
     private Cliente cliente;
     private Empleado empleado;
     private List<Prenda> prendas;
-    
-    //constructor
 
+    // NUEVO: estrategia de precio
+    private PrecioStrategy estrategiaPrecio;
+
+    // Constructor
     public ServicioAlquiler(Date fechaAlquiler, Cliente cliente, Empleado empleado, List<Prenda> prendas) {
         this.numero = consecutivo++;
         this.fechaSolicitud = new Date();
@@ -29,10 +35,10 @@ public class ServicioAlquiler {
         this.cliente = cliente;
         this.empleado = empleado;
         this.prendas = prendas;
+        this.estrategiaPrecio = new PrecioBase(); // estrategia por defecto
     }
-    
-    //Getters y Setters
 
+    // Getters y Setters
     public int getNumero() {
         return numero;
     }
@@ -80,6 +86,18 @@ public class ServicioAlquiler {
     public void setPrendas(List<Prenda> prendas) {
         this.prendas = prendas;
     }
-    
-}
 
+    // NUEVO: asignar estrategia
+    public void setEstrategiaPrecio(PrecioStrategy estrategia) {
+        this.estrategiaPrecio = estrategia;
+    }
+
+    // NUEVO: calcular costo usando la estrategia
+    public double calcularCosto(int diasAlquiler) {
+        if (estrategiaPrecio == null) {
+            estrategiaPrecio = new PrecioBase(); // fallback
+        }
+        // ejemplo: calcular sobre la primera prenda
+        return estrategiaPrecio.calcularPrecio(prendas.get(0), diasAlquiler);
+    }
+}

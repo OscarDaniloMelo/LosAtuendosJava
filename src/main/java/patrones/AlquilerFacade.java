@@ -12,6 +12,9 @@ import modelo.*;
 import persistencia.*;
 import java.util.*;
 
+// NUEVO: importamos la interfaz Command
+import patrones.command.Command;
+
 public class AlquilerFacade {
 
     private ClienteDAO clienteDAO = new ClienteDAO();
@@ -79,4 +82,10 @@ public class AlquilerFacade {
     public List<String> enviarPrendasLavanderia(int cantidad) {
         return lavanderiaDAO.enviarPrendasLavanderia(cantidad);
     }
+
+    // NUEVO: método para ejecutar comandos
+    public void ejecutarComando(Command comando) {
+        comando.ejecutar();
+    }
 }
+
